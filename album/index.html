@@ -74,32 +74,74 @@
         margin-right: 5px;
       }
     </style>
-    <script>
-      function openclose() {
+    <script type="module">
+      // Firebase SDK 라이브러리 가져오기
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+      import {
+        collection,
+        addDoc,
+      } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+      import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyDpO-Ux3t6VP3l9JlYOUYx8Ybe2VUzJUZM",
+        authDomain: "sparta-b9418.firebaseapp.com",
+        projectId: "sparta-b9418",
+        storageBucket: "sparta-b9418.appspot.com",
+        messagingSenderId: "589729005262",
+        appId: "1:589729005262:web:f2e81c110d47e778c31a9f",
+        measurementId: "G-F15KXXFLP5",
+      };
+
+      // Firebase 인스턴스 초기화
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      $("#postingbtn").click(async function () {
+        let img = $("#img").val();
+        let title = $("#title").val();
+        let content = $("#content").val();
+        let date = $("#date").val();
+
+        let doc = {
+          'image':img,
+          'title':title,
+          'content':content,
+          'date':date
+        };
+        await addDoc(collection(db, "albums"), doc);
+        alert('저장완료!');
+        window.location.reload()
+      });
+
+
+      $("#savebtn").click(async function () {
         $("#postingbox").toggle();
-      }
+      });
 
       function makeCard() {
-        // let img = $("#img").val();
+        let img = $("#img").val();
         let title = $("#title").val();
         let content = $("#content").val();
         let date = $("#date").val();
 
         let temp_html = `<div class="col">
-          <div class="card h-100">
-            <img
-              src=ss.jpg
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">${title}</h5>
-              <p class="card-text">${content}</p>
-            </div>
-            <div class="card-footer">
-              <small class="text-body-secondary">${date}</small>
-            </div>
-          </div>
-        </div>`;
+                <div class="card h-100">
+                  <img
+                    src=${img}
+                    alt="..."
+                  />
+                  <div class="card-body">
+                    <h5 class="card-title">${title}</h5>
+                    <p class="card-text">${content}</p>
+                  </div>
+                  <div class="card-footer">
+                    <small class="text-body-secondary">${date}</small>
+                  </div>
+                </div>
+              </div>`;
         $("#card").append(temp_html);
       }
     </script>
@@ -107,7 +149,7 @@
   <body>
     <div class="mytitle">
       <h1>나만의 추억앨범</h1>
-      <button onclick="openclose()">추억 저장하기</button>
+      <button id = "savebtn">추억 저장하기</button>
     </div>
     <div class="mypostingbox" id="postingbox">
       <div class="form-floating mb-3">
@@ -151,7 +193,7 @@
       </div>
 
       <div class="mybtn">
-        <button onclick="makeCard()" type="button" class="btn btn-primary">
+        <button id="postingbtn" type="button" class="btn btn-primary">
           기록하기
         </button>
         <button type="button" class="btn btn-outline-primary">닫기</button>
