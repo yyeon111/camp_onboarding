@@ -116,6 +116,7 @@
         window.location.reload();
       });
 
+      $("#card").empty();
       let docs = await getDocs(collection(db, "albums"));
       docs.forEach((doc) => {
         let row = doc.data();
