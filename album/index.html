@@ -106,31 +106,28 @@
         let date = $("#date").val();
 
         let doc = {
-          'image':img,
-          'title':title,
-          'content':content,
-          'date':date
+          image: img,
+          title: title,
+          content: content,
+          date: date,
         };
         await addDoc(collection(db, "albums"), doc);
-        alert('저장완료!');
-        window.location.reload()
+        alert("저장완료!");
+        window.location.reload();
       });
 
-
-      $("#savebtn").click(async function () {
-        $("#postingbox").toggle();
-      });
-
-      function makeCard() {
-        let img = $("#img").val();
-        let title = $("#title").val();
-        let content = $("#content").val();
-        let date = $("#date").val();
+      let docs = await getDocs(collection(db, "albums"));
+      docs.forEach((doc) => {
+        let row = doc.data();
+        let image = row['image'];
+        let title = row['title'];
+        let content = row['content'];
+        let date = row['date'];
 
         let temp_html = `<div class="col">
                 <div class="card h-100">
                   <img
-                    src=${img}
+                    src=${image}
                     alt="..."
                   />
                   <div class="card-body">
@@ -143,13 +140,18 @@
                 </div>
               </div>`;
         $("#card").append(temp_html);
-      }
+      });
+
+      $("#savebtn").click(async function () {
+        $("#postingbox").toggle();
+      });
+
     </script>
   </head>
   <body>
     <div class="mytitle">
       <h1>나만의 추억앨범</h1>
-      <button id = "savebtn">추억 저장하기</button>
+      <button id="savebtn">추억 저장하기</button>
     </div>
     <div class="mypostingbox" id="postingbox">
       <div class="form-floating mb-3">
